@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Any2API</title>
+  <style>
+    body {
+      width: 300px;
+      padding: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    input[type=text],input[type=password]
+    {
+      display: flex;
+      margin-top: 3px;
+      border: 2px solid gray;
+      border-radius: 5px;
+      padding: 5px!important;
+    }
+    button
+    {
+      height: 36px;
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Any2API Settings</h1>
+  <label>
+    URL:
+    <input type="text" id="urlInput">
+  </label>
+  <label>
+    Port:
+    <input type="text" id="portInput">
+  </label>
+  <label>
+    Any2Api Key:
+    <input type="password" id="passwordInput">
+  </label>
+  <label>
+    <input type="checkbox" id="enableCheckbox"> Enable
+  </label>
+  <button id="saveButton">Save</button>
+  <button id="disconnectButton">Disconnect</button>
+
+
+  <script src="popup.js"></script>
+</body>
+</html>

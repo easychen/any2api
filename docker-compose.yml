@@ -1,0 +1,11 @@
+version: '3'
+services:
+  any2api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 9000:9000
+    volumes:
+      - ./api/filter:/app/filter
+      - ./api/ssl:/app/ssl

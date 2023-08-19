@@ -1,0 +1,9 @@
+{
+  "name": "extension",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "eventsource-parser": "^1.0.0"
+  }
+}
