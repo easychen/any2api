@@ -5,6 +5,9 @@ A framework that turns any website into an API
 [简体中文](./README_CN.md) | [English](./README.md)
 
 > This project is mainly aimed at developers and only provides a brief explanation. If you have any questions, you can directly read the code, as the core code is only about 500 lines.
+
+![](images/20230820001742.png)
+
 ## Loading extension
 
 Directory: extension
