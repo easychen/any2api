@@ -31,6 +31,7 @@ wss.on('connection', function connection(ws, req) {
     // 用正则从 req 的 query （ password=xxx ） 中获得 password
     const password = req.url.match(/password=(.*)/)[1];
     if (serverPass && (password !== serverPass)) {
+        console.log(`bad api key ${password} `);
         ws.close();
         return;
     }
@@ -100,6 +101,13 @@ app.all('/send', isKeyAndExtOk, (req, res) =>{
             let payload = {
                 headers: ret.headers,
                 body: ret.any2api
+            }
+
+            if( ret.type == 'error' )
+            {
+                res.status(400).send(ret.any2api);
+                wsConnection.off('message', messageHandler);
+                return false;
             }
 
             // 检查下 是否存在 当前域名的 filter 

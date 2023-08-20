@@ -19,24 +19,34 @@ chrome.runtime.onInstalled.addListener(function() {
   });
   
   chrome.storage.onChanged.addListener(function(changes) {
-    if (changes.enabled) {
-      if (changes.enabled.newValue) {
-        startWebSocket();
-      } else {
+    chrome.storage.sync.get(['enabled'], function(result) {
+      if (!result.enabled) {
         stopWebSocket();
+      }else
+      {
+        startWebSocket(true);
       }
-    }
+
+    //   // 如果 enabled 为 false, 断开连接，否则尝试连接
+    // if (changes.enabled && changes.enabled.newValue === false) {
+    //   stopWebSocket();
+    // }else
+    // {
+    //   startWebSocket();
+    // }
+    });
+    
   });
   
-  async function startWebSocket() {
-    if( isConnected )
+  async function startWebSocket(force=false) {
+    if( isConnected && !force )
     {
       console.log("connected");
       return false;
     }
 
     
-    chrome.storage.sync.get(['url', 'port', 'password'], function(result) {
+    chrome.storage.sync.get(['url', 'port', 'password', 'domain'], function(result) {
       const urlInfo = new URL(result.url);
       const port = result.port;
       const password = result.password;
@@ -44,7 +54,7 @@ chrome.runtime.onInstalled.addListener(function() {
       socket = new WebSocket(`${wsProtocol}://${urlInfo.host}:${port}?password=${password}`);
       
       socket.onopen = function() {
-        console.log('WebSocket connection established');
+        console.log('WebSocket connection established', result.domain);
         // 设置 isConnected 为 true 表示成功连接
         isConnected = true;
         // 更新插件图标
@@ -71,6 +81,28 @@ chrome.runtime.onInstalled.addListener(function() {
         if( any2api )
         {
             const { url, headers, body, method } = any2api;
+            const host = new URL(url).host;
+            console.log( "host", host );
+            if( result.domain )
+            {
+              // 按 | 分割后，和url的host进行比较，如果等于或者是host的一部分，就发送请求，否则不发送
+              const domains = result.domain.split("|");
+              let isMatch = false;
+              for( let i=0; i<domains.length; i++ )
+              {
+                if( host.indexOf(domains[i]) !== -1 )
+                {
+                  isMatch = true;
+                  break;
+                }
+              }
+              if( !isMatch ) 
+              {
+                console.log( `request domain ${host} not in domain list ${result.domain}` );
+                socket.send(JSON.stringify({"any2api":{error:`request domain ${host} not in domain list ${result.domain}`},"type":"error"}));
+                return false;
+              }
+            }
             
             chrome.cookies.getAll({ url: url }, async function(cookies) {
             

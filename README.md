@@ -8,6 +8,10 @@ A framework that turns any website into an API
 
 ![](images/20230820001742.png)
 
+## Recent Updates
+
+1. Added domain whitelist to enhance security.
+
 ## Loading extension
 
 Directory: extension
